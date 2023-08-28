@@ -3,8 +3,8 @@
 namespace RndIT\PHPDemoSerialize\Objects\Message;
 
 
-use RndIT\PHPDemoSerialize\Objects\Interfaces\I_Serializable;
-use RndIT\PHPDemoSerialize\Objects\Traits\Tr_WithSerialization;
+use RndIT\PHPDemoSerialize\Objects\Message\Interfaces\I_Serializable;
+use RndIT\PHPDemoSerialize\Objects\Message\Traits\Tr_WithSerialization;
 
 /**
  * DTOAddData добавляет сериализируемое поле $objectData в котором хранятся пользовательские данные

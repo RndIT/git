@@ -1,6 +1,6 @@
 <?php
 
-namespace RndIT\PHPDemoSerialize\Objects\Traits;
+namespace RndIT\PHPDemoSerialize\Objects\Message\Traits;
 
 /*
 Данное расширение реализовывает механизм сериализации

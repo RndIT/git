@@ -1,6 +1,6 @@
 <?php
 
-namespace RndIT\PHPDemoSerialize\Objects\Interfaces;
+namespace RndIT\PHPDemoSerialize\Objects\Message\Interfaces;
 
 /**
  * Данный интерфейс определяет функциональность по сериализации.
