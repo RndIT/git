@@ -61,6 +61,9 @@ trait WithSerialization
     public static function unserialize(string $data): static
     {
         $arrDeserialized = json_decode($data, true);
+        if ($arrDeserialized===null){
+            return new Message();
+        }
         echo '__ARR DESERIALIZED__'.PHP_EOL;
         var_dump($arrDeserialized);
         if (strcmp(array_key_first($arrDeserialized), constMessageClassName) !== 0) {
@@ -75,20 +78,18 @@ trait WithSerialization
             $subClasses = $arrDeserialized[constMessageClassName];
             $meta = null;
 
-            foreach( $subClasses as $name => $value ){
+            foreach( $subClasses as $rec ){
+                $x = json_decode($rec, true);
+                $name = array_key_first($x);
                 if (strcmp($name, constMessageMetaClassName)===0){
                     echo 'Restore sub meta---'.PHP_EOL;
-                    var_dump($value);
-                    $meta = new Meta($value[constMessageMetaClassName]);
+                    $meta = new Meta($x[$name]);
                 }
             }
             $message = new Message($meta);
             var_dump($message);
             return $message;
         }
-
-
-        return json_decode($data);
     }
 
 

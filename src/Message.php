@@ -35,7 +35,7 @@ class Message extends DTO_AddObjectData
         isset($meta) ? $this->objectData['Meta'] = $meta : $this->objectData['Meta'] =new Meta($meta);
         // isset($event) ? $this->objectData['Event'] = $event : new Event($event);
         // isset($payload) ? $this->objectData['Payload'] = $payload : new Payload($payload); 
-       var_dump($this);
+       //var_dump($this);
     }
 
 

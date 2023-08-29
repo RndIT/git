@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "name": "Launch current script in console",
+            "type": "php",
+            "request": "launch",
+            "program": "${file}",
+            "cwd": "${fileDirname}",
+            "externalConsole": false,
+            "port": 9003
+        },
+    {
+        "name": "Launch current script in console",
+        "type": "php",
+        "request": "launch",
+        "program": "${file}",
+        "cwd": "${fileDirname}",
+        "externalConsole": false,
+        "port": 9003
+    }
+    ]
+}
