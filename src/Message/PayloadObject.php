@@ -1,14 +1,22 @@
 <?php
 namespace RndIT\PDS\Message;
 
-require_once('Tr_WithSerialization.php');
-use RndIT\PDS\Message\Traits\WithSerialization;
 
-require_once('DTO_AddObjectData.php');
-use RndIT\PDS\Message\DTO_AddObjectData;
-
-class Payload extends DTO_AddObjectData
+class Payload
 {
-    use WithSerialization;
- 
+    public function __construct(private ?string $str=null)
+    {
+        $this->str = $str;
+    }
+
+     public function setInfo(?string $data = null)
+    {
+        $this->str = $data;
+        return $this;
+    }
+
+    public function getInfo(): string
+    {
+        return $this->str;
+    }  
 }
