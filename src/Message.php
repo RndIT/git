@@ -18,7 +18,7 @@ class Message extends JsonDeserializer
 {
 
 
-    public $objectData = null;
+    private $objectData = null;
 
     /**
      * Summary of __construct
@@ -27,9 +27,9 @@ class Message extends JsonDeserializer
      * @param Payload|null $payload
      */
     public function __construct(
-        public ?Meta $meta = null, 
-        public ?Event $event = null, 
-        public ?Payload $payload = null)
+        private ?Meta $meta = null, 
+        private ?Event $event = null, 
+        private ?Payload $payload = null)
     {
         isset($meta) ? $this->objectData['Meta'] = $meta : $this->objectData['Meta'] =new Meta($meta);
         isset($event) ? $this->objectData['Event'] = $event : $this->objectData['Event'] = new Event($event);
@@ -73,10 +73,20 @@ class Message extends JsonDeserializer
 
 }
 
-// $msg = new Message(    new Meta('meta'),
+// $msg = new Message(    new Meta('metadata'),
 //                         new Event( 'event data'),
 //                         new Payload( 'payload data info text')
 //                     );
+
+
+//                     class A {
+//                         public $one = 1;
+                  
+//                         public function show_one() {
+//                             echo $this->one;
+//                         }
+//                     }                    
+// $msg->nested= new A;
 // $s = $msg->serialize();
 
 //                     // $s = json_encode($msg, JSON_FORCE_OBJECT);
@@ -84,5 +94,5 @@ class Message extends JsonDeserializer
 // var_dump($s);
 
 // $o = Message::deserialize($s);
-
+// $o->nested->show_one();
 // var_dump($o);

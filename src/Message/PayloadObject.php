@@ -4,6 +4,7 @@ namespace RndIT\PDS\Message;
 
 class Payload
 {
+
     public function __construct(public ?string $str=null)
     {
         $this->str = $str;
