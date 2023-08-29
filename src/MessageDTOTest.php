@@ -22,13 +22,13 @@ class MessageDTOTest extends TestCase
         ];
 
         $objMeta = new Meta($meta);
-        $this->assertEquals($objMeta, Meta::unserialize($objMeta->serialize()));
+        $this->assertEquals($objMeta, Meta::deserialize($objMeta->serialize()));
     }
 
     public function test_Meta_Is_Empty()
     {
         $objMeta = new Meta();
-        $this->assertEquals($objMeta, Meta::unserialize($objMeta->serialize()));
+        $this->assertEquals($objMeta, Meta::deserialize($objMeta->serialize()));
     }    
 
 
@@ -37,13 +37,13 @@ class MessageDTOTest extends TestCase
         $obj = new Event( array (   
                     'eventParam1' => 'Param1Value',
                     'eventParam2' => 'Param2Value'));
-        $this->assertEquals($obj, Event::unserialize($obj->serialize()));
+        $this->assertEquals($obj, Event::deserialize($obj->serialize()));
     }
 
     public function test_Event_Is_Empty()
     {
         $obj = new Event();
-        $this->assertEquals($obj, Event::unserialize($obj->serialize()));
+        $this->assertEquals($obj, Event::deserialize($obj->serialize()));
     }        
 
 
@@ -52,13 +52,13 @@ class MessageDTOTest extends TestCase
         $obj = new Payload( array (   
                     'plParam1' => 'Param1Value',
                     'plParam2' => 'Param2Value'));
-        $this->assertEquals($obj, Payload::unserialize($obj->serialize()));
+        $this->assertEquals($obj, Payload::deserialize($obj->serialize()));
     }
 
     public function test_Payload_Is_Empty()
     {
         $obj = new Payload();
-        $this->assertEquals($obj, Payload::unserialize($obj->serialize()));
+        $this->assertEquals($obj, Payload::deserialize($obj->serialize()));
     }  
 
     public function test_Message_NotEmpty()
@@ -69,14 +69,14 @@ class MessageDTOTest extends TestCase
         ];
 
         $msg = new Message(new Meta($meta));
-        $this->assertEquals($msg, Message::unserialize($msg->serialize()), 'Message objects not equals!');
+        $this->assertEquals($msg, Message::deserialize($msg->serialize()), 'Message objects not equals!');
 
         $msg2 = new Message(    new Meta($meta),
                                 new Event( array (   
                                     'eventParam1' => 'Param1Value',
                                     'eventParam2' => 'Param2Value') )
                             );
-        $this->assertEquals($msg2, Message::unserialize($msg2->serialize()), 'Message objects not equals!');
+        $this->assertEquals($msg2, Message::deserialize($msg2->serialize()), 'Message objects not equals!');
 
         $msg3 = new Message(    new Meta($meta),
                                 new Event( array (   
@@ -86,14 +86,14 @@ class MessageDTOTest extends TestCase
                                     'plParam1' => 'Param1Value',
                                     'plParam2' => 'Param2Value') )
                             );
-        $this->assertEquals($msg3, Message::unserialize($msg3->serialize()), 'Message objects not equals!');
+        $this->assertEquals($msg3, Message::deserialize($msg3->serialize()), 'Message objects not equals!');
 
     }
 
     public function test_Message_Is_Empty()
     {
         $msg = new Message();
-        $this->assertEquals($msg, Message::unserialize($msg->serialize()), 'Message objects not equals!');
+        $this->assertEquals($msg, Message::deserialize($msg->serialize()), 'Message objects not equals!');
 
     }    
 }

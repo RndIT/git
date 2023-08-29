@@ -52,7 +52,7 @@ trait WithSerialization
      * @param string $value JSON-строка для восстановления объекта
      * @return static
      */
-    public static function unserialize(string $data): static
+    public static function deserialize(string $data): static
     {
         $arrDeserialized = json_decode($data, true);
         if ($arrDeserialized === null) {

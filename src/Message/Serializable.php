@@ -9,5 +9,5 @@ interface Serializable
 {
     public function serialize(): string;
 
-    public static function unserialize(string $data): static;
+    public static function deserialize(string $data): static;
 }
