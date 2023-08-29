@@ -61,11 +61,9 @@ trait WithSerialization
     public static function unserialize(string $data): static
     {
         $arrDeserialized = json_decode($data, true);
-        if ($arrDeserialized===null){
+        if ($arrDeserialized === null) {
             return new Message();
         }
-        echo '__ARR DESERIALIZED__'.PHP_EOL;
-        var_dump($arrDeserialized);
         if (strcmp(array_key_first($arrDeserialized), constMessageClassName) !== 0) {
             // на входе - сериализованый субкласс
             if (array_key_exists(constMessageMetaClassName, $arrDeserialized)) {
@@ -74,23 +72,17 @@ trait WithSerialization
             }
         } else {
             // Восстанавливаю исходный класс с подклассами
-            echo 'Restore Message class'.PHP_EOL;
             $subClasses = $arrDeserialized[constMessageClassName];
             $meta = null;
 
-            foreach( $subClasses as $rec ){
+            foreach ($subClasses as $rec) {
                 $x = json_decode($rec, true);
                 $name = array_key_first($x);
-                if (strcmp($name, constMessageMetaClassName)===0){
-                    echo 'Restore sub meta---'.PHP_EOL;
+                if (strcmp($name, constMessageMetaClassName) === 0) {
                     $meta = new Meta($x[$name]);
                 }
             }
-            $message = new Message($meta);
-            var_dump($message);
-            return $message;
+            return new Message($meta);
         }
     }
-
-
 }
