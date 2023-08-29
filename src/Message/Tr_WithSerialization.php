@@ -1,9 +1,18 @@
 <?php
 
 namespace RndIT\PDS\Message\Traits;
+
+use RndIT\PDS\Message\Meta;
+use RndIT\PDS\Message\Message;
+
 /**
  * Трейт Tr_WithSerialization реализовывает механизм сериализации
  */
+
+define('constMessageClassName', 'RndIT\PDS\Message\Message');
+define('constMessageMetaClassName', 'RndIT\PDS\Message\Meta');
+
+
 trait WithSerialization
 {
     /**
@@ -13,39 +22,22 @@ trait WithSerialization
     public function serialize(): string
     {
 
-        
-        $thisClassName = get_class($this);
-        $messageClassSubName = 'RndIT\PDS\Message\Message';
-        $serializeInterface = 'RndIT\PDS\Message\Interfaces\Serializable';
-        echo 'SERIALIZE('.$thisClassName.')'.PHP_EOL;
 
-        if( strpos($thisClassName, $messageClassSubName)!==false ){
+        $thisClassName = get_class($this);
+        echo 'SERIALIZE(' . $thisClassName . ')' . PHP_EOL;
+
+        if (strpos($thisClassName, constMessageClassName) !== false) {
             // Сериализуется исходный объект "Сообщение"
-            echo "Ser Message".PHP_EOL;
             // Надо перебрать все входящие в него объекты (хотя бы в плоской модели)
             // и  если там есть интерфейс сериализации - вызвать его и сохранить.
             $sObjectMessageItems = array();
-            array_push($sObjectMessageItems, $this->objectData['Meta']->serialize() );
-            return json_encode( array($thisClassName => $sObjectMessageItems));
-
-
-            // $childsClassVarsNames = get_class_vars($thisClassName);
-            // foreach($childsClassVarsNames as $cVN=>$cVK){
-            //     $classInterfaces = class_implements($cVN);
-            //     var_dump($classInterfaces);
-            //     echo $cVN.PHP_EOL;
-            //     if ( in_array($serializeInterface, $classInterfaces) ){
-            //         echo $cVN;
-            //         $sObjectMessageItems[$cVN] = $this->objectData[$cVN]->serialize();
-            //     }
-            //     echo var_dump($sObjectMessageItems);
-                // if ()
-            // }
+            array_push($sObjectMessageItems, $this->objectData['Meta']->serialize());
+            return json_encode(array($thisClassName => $sObjectMessageItems));
         } else {
-            echo "Ser other object".PHP_EOL;
-            return json_encode( array($thisClassName => $this->objectData) );
+            echo "Ser other object" . PHP_EOL;
+            return json_encode(array($thisClassName => $this->objectData));
         }
-        
+
         // //return serialize($this);
         // echo '++++ObjectData of '.get_class($this).PHP_EOL;
         // var_dump($this);
@@ -66,9 +58,36 @@ trait WithSerialization
      * @param string $value JSON-строка для восстановления объекта
      * @return static
      */
-    public static function unserialize(string $data): array
+    public static function unserialize(string $data): static
     {
-        //return unserialize($data);
+        $arrDeserialized = json_decode($data, true);
+        echo '__ARR DESERIALIZED__'.PHP_EOL;
+        var_dump($arrDeserialized);
+        if (strcmp(array_key_first($arrDeserialized), constMessageClassName) !== 0) {
+            // на входе - сериализованый субкласс
+            if (array_key_exists(constMessageMetaClassName, $arrDeserialized)) {
+                // Восстанавливаю вложенный объект Meta
+                return new Meta($arrDeserialized[constMessageMetaClassName]);
+            }
+        } else {
+            // Восстанавливаю исходный класс с подклассами
+            echo 'Restore Message class'.PHP_EOL;
+            $subClasses = $arrDeserialized[constMessageClassName];
+            $meta = null;
+
+            foreach( $subClasses as $name => $value ){
+                if (strcmp($name, constMessageMetaClassName)===0){
+                    echo 'Restore sub meta---'.PHP_EOL;
+                    var_dump($value);
+                    $meta = new Meta($value[constMessageMetaClassName]);
+                }
+            }
+            $message = new Message($meta);
+            var_dump($message);
+            return $message;
+        }
+
+
         return json_decode($data);
     }
 

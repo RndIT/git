@@ -13,13 +13,21 @@ class MessageDTOTest extends TestCase {
                     'metaParam2'=>'Param2Value' ];
 
           $objMeta = new Meta($meta);
+          echo 'Source meta object dump'.PHP_EOL;
+          var_dump($objMeta);
+
           $serializeMeta = $objMeta->serialize();
+          var_dump($serializeMeta);
+          $unserMeta = Meta::unserialize($serializeMeta);
+          var_dump($unserMeta);
+          $this->assertEquals($objMeta, $unserMeta);
+
         // echo '--------------------'.PHP_EOL;
 
-        $msg = new Message($objMeta);
+        //$msg = new Message($objMeta);
         // echo '--------------------'.PHP_EOL;
         // echo var_dump($msg->getMeta()->getData());
-        echo $msg->serialize();
+        //echo $msg->serialize();
         //$this->assertEquals($msg, Message::unserialize($msg->serialize()));
     }
 }
