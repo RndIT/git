@@ -3,6 +3,9 @@
 namespace RndIT\PDS\Message\Traits;
 
 use RndIT\PDS\Message\Meta;
+use RndIT\PDS\Message\Event;
+use RndIT\PDS\Message\Payload;
+
 use RndIT\PDS\Message\Message;
 
 /**
@@ -11,6 +14,9 @@ use RndIT\PDS\Message\Message;
 
 define('constMessageClassName', 'RndIT\PDS\Message\Message');
 define('constMessageMetaClassName', 'RndIT\PDS\Message\Meta');
+define('constMessageEventClassName', 'RndIT\PDS\Message\Event');
+define('constMessagePayloadClassName', 'RndIT\PDS\Message\Payload');
+
 
 
 trait WithSerialization
@@ -23,33 +29,21 @@ trait WithSerialization
     {
 
 
-        $thisClassName = get_class($this);
-        echo 'SERIALIZE(' . $thisClassName . ')' . PHP_EOL;
-
+        $thisClassName = get_class($this); // Получаю имя сериализуемого класса
         if (strpos($thisClassName, constMessageClassName) !== false) {
             // Сериализуется исходный объект "Сообщение"
             // Надо перебрать все входящие в него объекты (хотя бы в плоской модели)
             // и  если там есть интерфейс сериализации - вызвать его и сохранить.
             $sObjectMessageItems = array();
-            array_push($sObjectMessageItems, $this->objectData['Meta']->serialize());
+            foreach (array('Meta', 'Event', 'Payload') as $key) {
+                if (in_array($key, array_keys($this->objectData))) {
+                    array_push($sObjectMessageItems, $this->objectData[$key]->serialize());
+                }
+            }
             return json_encode(array($thisClassName => $sObjectMessageItems));
         } else {
-            echo "Ser other object" . PHP_EOL;
             return json_encode(array($thisClassName => $this->objectData));
         }
-
-        // //return serialize($this);
-        // echo '++++ObjectData of '.get_class($this).PHP_EOL;
-        // var_dump($this);
-        // echo json_encode($this->objectData['Meta']->getData(), JSON_PRETTY_PRINT);
-        // echo PHP_EOL.'---ObjectData'.PHP_EOL;
-
-        // echo '++++ObjectData[Meta]'.PHP_EOL;
-        // echo $this->objectData['Meta'];
-        // echo PHP_EOL.'----ObjectData[Meta]'.PHP_EOL;
-
-
-        return json_encode($this->objectData['Meta']->getData(), JSON_FORCE_OBJECT);
     }
 
 
@@ -70,6 +64,14 @@ trait WithSerialization
                 // Восстанавливаю вложенный объект Meta
                 return new Meta($arrDeserialized[constMessageMetaClassName]);
             }
+            if (array_key_exists(constMessageEventClassName, $arrDeserialized)) {
+                // Восстанавливаю вложенный объект Meta
+                return new Event($arrDeserialized[constMessageEventClassName]);
+            }
+            if (array_key_exists(constMessagePayloadClassName, $arrDeserialized)) {
+                // Восстанавливаю вложенный объект Meta
+                return new Payload($arrDeserialized[constMessagePayloadClassName]);
+            }
         } else {
             // Восстанавливаю исходный класс с подклассами
             $subClasses = $arrDeserialized[constMessageClassName];
@@ -81,6 +83,14 @@ trait WithSerialization
                 if (strcmp($name, constMessageMetaClassName) === 0) {
                     $meta = new Meta($x[$name]);
                 }
+
+                if (strcmp($name, constMessageEventClassName) === 0) {
+                    $meta = new Event($x[$name]);
+                }
+
+                if (strcmp($name, constMessagePayloadClassName) === 0) {
+                    $meta = new Payload($x[$name]);
+                }                
             }
             return new Message($meta);
         }

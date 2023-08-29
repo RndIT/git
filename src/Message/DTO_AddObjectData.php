@@ -18,30 +18,20 @@ class DTO_AddObjectData implements Serializable
 
     protected array $objectData = array(); // пользовательские данные объекта
 
-    /**
-     * Записать данные объекта (fluent-setter)
-     * @param mixed|null $data
-     * @return static
-     */
+    public function __construct(?array $data=null)
+    {
+        isset($data) ?  $this->objectData = $data : $this->objectData = array();
+    }
+
     public function setData(?array $data = null)
     {
-
-        if (is_null($data)) // Очистка данных
-        {
-            $this->objectData = array();
-            return $this;
-        }
-        $this->objectData = $data;
+        isset($data) ?  $this->objectData = $data : $this->objectData = array();
         return $this;
     }
 
-    /**
-     * Получить информацию из объекта
-     * @return mixed
-     */
     public function getData(): mixed
     {
         return $this->objectData;
-    }
+    }  
 }
 

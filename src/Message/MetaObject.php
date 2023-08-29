@@ -10,20 +10,5 @@ use RndIT\PDS\Message\DTO_AddObjectData;
 class Meta extends DTO_AddObjectData
 {
     use WithSerialization;
-    public function __construct(?array $data=null)
-    {
-        isset($data) ?  $this->objectData = $data : $this->objectData = array();
-    }
-
-    public function setData(?array $data = null)
-    {
-        isset($data) ?  $this->objectData = $data : $this->objectData = array();
-        return $this;
-    }
-
-    public function getData(): mixed
-    {
-        return $this->objectData;
-    }  
 
 }

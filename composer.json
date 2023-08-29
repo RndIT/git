@@ -7,7 +7,6 @@
   "authors": [
     {
       "name": "Eugeny",
-      "email": "rndit@mail.ru",
       "role": "Developer"
     }
   ],
@@ -17,12 +16,7 @@
   },
   "autoload": {
     "psr-4": {
-      "RndIT\\PHPDemoSerialize\\Objects\\Message\\": "src/Objects"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Tests\\": "tests"
+      "RndIT\\PHPDemoSerialize\\Objects\\Message\\": "src"
     }
   },
   "require-dev": {

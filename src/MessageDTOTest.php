@@ -8,6 +8,8 @@ require_once 'Message.php';
 use PHPUnit\Framework\TestCase;
 use RndIT\PDS\Message\Message;
 use RndIT\PDS\Message\Meta;
+use RndIT\PDS\Message\Event;
+use RndIT\PDS\Message\Payload;
 
 class MessageDTOTest extends TestCase
 {
@@ -20,15 +22,44 @@ class MessageDTOTest extends TestCase
         ];
 
         $objMeta = new Meta($meta);
-        echo 'Source meta object dump' . PHP_EOL;
-        var_dump($objMeta);
-
-        $serializeMeta = $objMeta->serialize();
-        var_dump($serializeMeta);
-        $unserMeta = Meta::unserialize($serializeMeta);
-        var_dump($unserMeta);
-        $this->assertEquals($objMeta, $unserMeta);
+        $this->assertEquals($objMeta, Meta::unserialize($objMeta->serialize()));
     }
+
+    public function test_Meta_Is_Empty()
+    {
+        $objMeta = new Meta();
+        $this->assertEquals($objMeta, Meta::unserialize($objMeta->serialize()));
+    }    
+
+
+    public function test_Event_Not_Empty()
+    {
+        $obj = new Event( array (   
+                    'eventParam1' => 'Param1Value',
+                    'eventParam2' => 'Param2Value'));
+        $this->assertEquals($obj, Event::unserialize($obj->serialize()));
+    }
+
+    public function test_Event_Is_Empty()
+    {
+        $obj = new Event();
+        $this->assertEquals($obj, Event::unserialize($obj->serialize()));
+    }        
+
+
+    public function test_Payload_Not_Empty()
+    {
+        $obj = new Payload( array (   
+                    'plParam1' => 'Param1Value',
+                    'plParam2' => 'Param2Value'));
+        $this->assertEquals($obj, Payload::unserialize($obj->serialize()));
+    }
+
+    public function test_Payload_Is_Empty()
+    {
+        $obj = new Payload();
+        $this->assertEquals($obj, Payload::unserialize($obj->serialize()));
+    }  
 
     public function test_Message_NotEmpty()
     {
@@ -37,22 +68,43 @@ class MessageDTOTest extends TestCase
             'metaParam2' => 'Param2Value'
         ];
 
-        $objMeta = new Meta($meta);
-        $msg = new Message($objMeta);
-        // echo '---------Original Message-----------' . PHP_EOL;
-        // var_dump($msg);
-        // echo '---------Serialized Message-----------' . PHP_EOL;
-        // $serMessage = $msg->serialize();
-        // var_dump($serMessage);
-        // echo '---------Deserialized Message-----------' . PHP_EOL;
-        // $dsMessage = Message::unserialize($serMessage);
-        // var_dump($dsMessage);
-
+        $msg = new Message(new Meta($meta));
         $this->assertEquals($msg, Message::unserialize($msg->serialize()), 'Message objects not equals!');
 
+        $msg2 = new Message(    new Meta($meta),
+                                new Event( array (   
+                                    'eventParam1' => 'Param1Value',
+                                    'eventParam2' => 'Param2Value') )
+                            );
+        $this->assertEquals($msg2, Message::unserialize($msg2->serialize()), 'Message objects not equals!');
+
+        $msg3 = new Message(    new Meta($meta),
+                                new Event( array (   
+                                    'eventParam1' => 'Param1Value',
+                                    'eventParam2' => 'Param2Value') ),
+                                new Payload( array (   
+                                    'plParam1' => 'Param1Value',
+                                    'plParam2' => 'Param2Value') )
+                            );
+        $this->assertEquals($msg3, Message::unserialize($msg3->serialize()), 'Message objects not equals!');
+
     }
+
+    public function test_Message_Is_Empty()
+    {
+        $msg = new Message();
+        $this->assertEquals($msg, Message::unserialize($msg->serialize()), 'Message objects not equals!');
+
+    }    
 }
 
-$test = new MessageDTOTest('Test Message DTO');
+$test = new MessageDTOTest('Test Message serialization');
+$test->test_Meta_Is_Empty();
 $test->test_Meta_Not_Empty();
+$test->test_Event_Is_Empty();
+$test->test_Event_Not_Empty();
+$test->test_Payload_Is_Empty();
+$test->test_Payload_Not_Empty();
 $test->test_Message_NotEmpty();
+$test->test_Message_Is_Empty();
+echo 'Testing is done'.PHP_EOL;
