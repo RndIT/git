@@ -4,7 +4,7 @@ namespace RndIT\PDS\Message;
 
 class Meta
 {
-    public function __construct(private ?string $str=null)
+    public function __construct(public ?string $str=null)
     {
         $this->str = $str;
     }

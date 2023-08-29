@@ -2,26 +2,23 @@
 
 namespace RndIT\PDS\Message;
 
-require_once 'Message/EventObject.php';
-require_once 'Message/MetaObject.php';
-require_once 'Message/PayloadObject.php';
-require_once 'Message/Tr_WithSerialization.php';
+require_once './Message/JsonDeserilizator.php';
+require_once './Message/EventObject.php';
+require_once './Message/MetaObject.php';
+require_once './Message/PayloadObject.php';
 
-use RndIT\PDS\Message\Traits\WithSerialization;
-use RndIT\PDS\Message\Event;
-use RndIT\PDS\Message\Meta;
-use RndIT\PDS\Message\Payload;
+
 
 
 /**
  * Класс, реализующий объект Сообщение, состояние которого 
  * можно сохранять и восстанавливать из JSON вместе с вложенными объектами.
  */
-class Message
+class Message extends JsonDeserializer
 {
-    use WithSerialization;
 
-    private $objectData = null;
+
+    public $objectData = null;
 
     /**
      * Summary of __construct
@@ -30,13 +27,13 @@ class Message
      * @param Payload|null $payload
      */
     public function __construct(
-        ?Meta $meta = null, 
-        ?Event $event = null, 
-        ?Payload $payload = null)
+        public ?Meta $meta = null, 
+        public ?Event $event = null, 
+        public ?Payload $payload = null)
     {
         isset($meta) ? $this->objectData['Meta'] = $meta : $this->objectData['Meta'] =new Meta($meta);
-        isset($event) ? $this->objectData['Event'] = $event : new Event($event);
-        isset($payload) ? $this->objectData['Payload'] = $payload : new Payload($payload); 
+        isset($event) ? $this->objectData['Event'] = $event : $this->objectData['Event'] = new Event($event);
+        isset($payload) ? $this->objectData['Payload'] = $payload : $this->objectData['Payload'] = new Payload($payload); 
     }
 
 
@@ -76,11 +73,14 @@ class Message
 
 }
 
-
-$m=new Message();
-
-$s =$m->serialize();
+$msg = new Message(    new Meta('meta'),
+                        new Event( 'event data'),
+                        new Payload( 'payload data info text')
+                    );
+$s = json_encode($msg, JSON_FORCE_OBJECT);
+var_dump($msg);
 var_dump($s);
 
-$o = Message::deserialize($s);
+$o = Message::DeserializeArray($s);
+
 var_dump($o);

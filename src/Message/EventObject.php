@@ -1,9 +1,10 @@
 <?php
 namespace RndIT\PDS\Message;
+require_once 'JsonDeserilizator.php';
 
-class Event 
+class Event extends JsonDeserializer
 {
-    public function __construct(private ?string $str=null)
+    public function __construct(public ?string $str=null)
     {
         $this->str = $str;
     }
