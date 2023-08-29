@@ -73,14 +73,16 @@ class Message extends JsonDeserializer
 
 }
 
-$msg = new Message(    new Meta('meta'),
-                        new Event( 'event data'),
-                        new Payload( 'payload data info text')
-                    );
-$s = json_encode($msg, JSON_FORCE_OBJECT);
-var_dump($msg);
-var_dump($s);
+// $msg = new Message(    new Meta('meta'),
+//                         new Event( 'event data'),
+//                         new Payload( 'payload data info text')
+//                     );
+// $s = $msg->serialize();
 
-$o = Message::DeserializeArray($s);
+//                     // $s = json_encode($msg, JSON_FORCE_OBJECT);
+// var_dump($msg);
+// var_dump($s);
 
-var_dump($o);
+// $o = Message::deserialize($s);
+
+// var_dump($o);
