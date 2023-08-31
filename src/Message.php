@@ -2,24 +2,23 @@
 
 namespace RndIT\PDS\Message;
 
-require_once 'Message/DTO_AddObjectData.php';
-require_once 'Message/EventObject.php';
-require_once 'Message/MetaObject.php';
-require_once 'Message/PayloadObject.php';
+require_once './Message/JsonDeserilizator.php';
+require_once './Message/EventObject.php';
+require_once './Message/MetaObject.php';
+require_once './Message/PayloadObject.php';
 
-use RndIT\PDS\Message\Traits\WithSerialization;
-use RndIT\PDS\Message\Event;
-use RndIT\PDS\Message\Meta;
-use RndIT\PDS\Message\Payload;
+
 
 
 /**
  * Класс, реализующий объект Сообщение, состояние которого 
  * можно сохранять и восстанавливать из JSON вместе с вложенными объектами.
  */
-class Message extends DTO_AddObjectData
+class Message extends JsonDeserializer
 {
-    use WithSerialization;
+
+
+    private $objectData = null;
 
     /**
      * Summary of __construct
@@ -28,14 +27,13 @@ class Message extends DTO_AddObjectData
      * @param Payload|null $payload
      */
     public function __construct(
-        ?Meta $meta = null, 
-        ?Event $event = null, 
-        ?Payload $payload = null)
+        private ?Meta $meta = null, 
+        private ?Event $event = null, 
+        private ?Payload $payload = null)
     {
         isset($meta) ? $this->objectData['Meta'] = $meta : $this->objectData['Meta'] =new Meta($meta);
-        // isset($event) ? $this->objectData['Event'] = $event : new Event($event);
-        // isset($payload) ? $this->objectData['Payload'] = $payload : new Payload($payload); 
-       //var_dump($this);
+        isset($event) ? $this->objectData['Event'] = $event : $this->objectData['Event'] = new Event($event);
+        isset($payload) ? $this->objectData['Payload'] = $payload : $this->objectData['Payload'] = new Payload($payload); 
     }
 
 
@@ -75,3 +73,26 @@ class Message extends DTO_AddObjectData
 
 }
 
+// $msg = new Message(    new Meta('metadata'),
+//                         new Event( 'event data'),
+//                         new Payload( 'payload data info text')
+//                     );
+
+
+//                     class A {
+//                         public $one = 1;
+                  
+//                         public function show_one() {
+//                             echo $this->one;
+//                         }
+//                     }                    
+// $msg->nested= new A;
+// $s = $msg->serialize();
+
+//                     // $s = json_encode($msg, JSON_FORCE_OBJECT);
+// var_dump($msg);
+// var_dump($s);
+
+// $o = Message::deserialize($s);
+// $o->nested->show_one();
+// var_dump($o);
